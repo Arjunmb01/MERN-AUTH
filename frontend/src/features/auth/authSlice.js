@@ -5,6 +5,7 @@ import api from '../../services/api';
 export const login = createAsyncThunk('auth/login', async (userData, thunkAPI) => {
     try {
         const response = await api.post('/auth/login', userData);
+        console.log("Response....",response)
         return response.data;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response?.data?.message || 'Login failed');
@@ -58,8 +59,7 @@ const authSlice = createSlice({
             state.message = '';
         },
         setCredentials: (state, action) => {
-            const { accessToken, ...user } = action.payload; // Payload should have accessToken and user info
-            state.accessToken = accessToken;
+            const { accessToken, ...user } = action.payload; 
             state.user = user;
         },
         updateAccessToken: (state, action) => {
@@ -79,7 +79,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.isSuccess = true;
                 state.accessToken = action.payload.accessToken;
-                state.user = action.payload; // Contains _id, name, email, role etc.
+                state.user = action.payload;
             })
             .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;

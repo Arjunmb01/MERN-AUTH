@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { register, reset } from '../features/auth/authSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import '../styles/AuthPages.css';
 
 function Register() {
@@ -23,6 +25,9 @@ function Register() {
     const { user, isLoading, isError, isSuccess, message } = useSelector(
         (state) => state.auth
     );
+
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     useEffect(() => {
         if (isError) {
@@ -165,7 +170,6 @@ function Register() {
                                 value={name}
                                 placeholder="Enter your name"
                                 onChange={onChange}
-                                required
                             />
                             {errors.name && <span className="field-error">{errors.name}</span>}
                         </div>
@@ -179,38 +183,76 @@ function Register() {
                                 value={email}
                                 placeholder="Enter your email"
                                 onChange={onChange}
-                                required
                             />
                             {errors.email && <span className="field-error">{errors.email}</span>}
                         </div>
 
                         <div className="form-field">
                             <label>Password</label>
-                            <input
-                                type="password"
-                                className={`modern-input ${errors.password ? 'input-error' : ''}`}
-                                name="password"
-                                value={password}
-                                placeholder="Enter password"
-                                onChange={onChange}
-                                required
-                            />
-                            {errors.password && <span className="field-error">{errors.password}</span>}
+
+                            <div className="password-wrapper">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    className={`modern-input ${errors.password ? 'input-error' : ''}`}
+                                    name="password"
+                                    value={password}
+                                    placeholder="Enter password"
+                                    onChange={onChange}
+                                />
+
+                                <span
+                                    className="password-toggle"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={showPassword ? faEyeSlash : faEye}
+                                    />
+                                </span>
+                            </div>
+
+                            {errors.password && (
+                                <span className="field-error">{errors.password}</span>
+                            )}
                         </div>
+
 
                         <div className="form-field">
                             <label>Confirm Password</label>
-                            <input
-                                type="password"
-                                className={`modern-input ${errors.confirmPassword ? 'input-error' : ''}`}
-                                name="confirmPassword"
-                                value={confirmPassword}
-                                placeholder="Confirm password"
-                                onChange={onChange}
-                                required
-                            />
-                            {errors.confirmPassword && <span className="field-error">{errors.confirmPassword}</span>}
+
+                            <div className="password-wrapper">
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    className={`modern-input ${errors.confirmPassword ? 'input-error' : ''
+                                        }`}
+                                    name="confirmPassword"
+                                    value={confirmPassword}
+                                    placeholder="Confirm password"
+                                    onChange={onChange}
+                                />
+
+                                <span
+                                    className="password-toggle"
+                                    onClick={() =>
+                                        setShowConfirmPassword((prev) => !prev)
+                                    }
+                                >
+                                    <FontAwesomeIcon
+                                        icon={
+                                            showConfirmPassword
+                                                ? faEyeSlash
+                                                : faEye
+                                        }
+                                    />
+                                </span>
+                            </div>
+
+                            {errors.confirmPassword && (
+                                <span className="field-error">
+                                    {errors.confirmPassword}
+                                </span>
+                            )}
                         </div>
+
 
                         <button type="submit" className="auth-submit-btn">
                             Sign Up

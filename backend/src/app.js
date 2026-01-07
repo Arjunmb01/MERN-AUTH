@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const path = require('path');
@@ -12,10 +11,9 @@ const app = express();
 app.use(express.json({ limit: '35mb' }));
 app.use(express.urlencoded({ extended: true, limit: '35mb' }));
 app.use(cookieParser());
-app.use(helmet());
 app.use(morgan('dev'));
 
-// CORS Configuration
+
 app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true,
@@ -23,7 +21,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Basic Route for testing
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Server is running', env: process.env.NODE_ENV });
 });

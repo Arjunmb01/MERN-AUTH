@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login, reset } from '../features/auth/authSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import '../styles/AuthPages.css';
 
 function Login() {
@@ -13,7 +15,7 @@ function Login() {
 
     const [errors, setErrors] = useState({});
     const [rememberMe, setRememberMe] = useState(false);
-
+    const [showPassword, setShowPassword] = useState(false)
     const { email, password } = formData;
 
     const navigate = useNavigate();
@@ -83,11 +85,6 @@ function Login() {
             password: passwordError
         });
 
-        if (emailError || passwordError) {
-            toast.error('Please fix all errors before submitting');
-            return;
-        }
-
         const userData = {
             email,
             password,
@@ -135,24 +132,38 @@ function Login() {
                                 value={email}
                                 placeholder="Enter your email"
                                 onChange={onChange}
-                                required
                             />
                             {errors.email && <span className="field-error">{errors.email}</span>}
                         </div>
 
                         <div className="form-field">
                             <label>Password</label>
-                            <input
-                                type="password"
-                                className={`modern-input ${errors.password ? 'input-error' : ''}`}
-                                name="password"
-                                value={password}
-                                placeholder="Enter your password"
-                                onChange={onChange}
-                                required
-                            />
-                            {errors.password && <span className="field-error">{errors.password}</span>}
+
+                            <div className="password-wrapper">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    className={`modern-input ${errors.password ? 'input-error' : ''}`}
+                                    name="password"
+                                    value={password}
+                                    placeholder="Enter password"
+                                    onChange={onChange}
+                                />
+
+                                <span
+                                    className="password-toggle"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                >
+                                    <FontAwesomeIcon
+                                        icon={showPassword ? faEyeSlash : faEye}
+                                    />
+                                </span>
+                            </div>
+
+                            {errors.password && (
+                                <span className="field-error">{errors.password}</span>
+                            )}
                         </div>
+
 
                         <div className="form-options">
                             <label className="checkbox-label">
